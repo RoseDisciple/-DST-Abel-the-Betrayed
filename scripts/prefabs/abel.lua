@@ -120,6 +120,19 @@ local master_postinit = function(inst)
 	
 	inst.OnLoad = onload
     inst.OnNewSpawn = onload
+		inst.components.eater.strongstomach = true
+	
+	inst.components.eater.oldEat = inst.components.eater.Eat
+	function inst.components.eater:Eat(food)
+		if self:CanEat(food) then
+			if food.components.edible.foodtype == FOODTYPE.VEGGIE then
+				food.components.edible.healthvalue = food.components.edible.healthvalue * 1.5
+				food.components.edible.hungervalue = food.components.edible.hungervalue * 1.5
+				food.components.edible.sanityvalue = food.components.edible.sanityvalue * 1.5
+			end
+		end
+		return inst.components.eater:oldEat(food)
+	end
 end
 
 return MakePlayerCharacter("abel", prefabs, assets, common_postinit, master_postinit, start_inv)
